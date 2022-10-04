@@ -39,48 +39,48 @@ class DynamicTextField extends Sprite {
 	var rm:JointManager;
 
 
-    public var textField:TextField;
+  	public var textField:TextField;
 
-    /**
-     * A container for all border sprites
-     */
-    public var borders:{
-        left:Sprite,
-        right:Sprite,
-        top:Sprite,
-        bottom:Sprite
-    };
+    	/**
+     	 * A container for all border sprites
+     	 */
+    	public var borders:{
+        	left:Sprite,
+        	right:Sprite,
+        	top:Sprite,
+        	bottom:Sprite
+    	};
 
 	/**
 	 * A container for all joint sprites
 	 */
-    public var joints:{
-        middleLeft:Sprite,
-        middleRight:Sprite,
-        middleTop:Sprite,
-        middleBottom:Sprite,
-        topLeft:Sprite,
-        topRight:Sprite,
-        bottomLeft:Sprite,
-        bottomRight:Sprite,
+    	public var joints:{
+        	middleLeft:Sprite,
+        	middleRight:Sprite,
+        	middleTop:Sprite,
+        	middleBottom:Sprite,
+        	topLeft:Sprite,
+        	topRight:Sprite,
+        	bottomLeft:Sprite,
+       		bottomRight:Sprite,
 		rotation:Sprite
-    };
+    	};
 
-    /**
-     * Whether or not the text field is dynamically resizable by the user:
-     * 
-     * When enabled, the user can extend the text field's size when pressing the corners/middles.
-     */
-    public var resizable(default, set):Bool = true;
+    	/**
+    	 * Whether or not the text field is dynamically resizable by the user:
+    	 * 
+    	 * When enabled, the user can extend the text field's size when pressing the corners/middles.
+    	 */
+    	public var resizable(default, set):Bool = true;
 
-    /**
-     * Whether or not the text field has an interactive rotation button:
-     * 
-     * When enabled, the user can rotate the textfield by pressing the rotation button.
+    	/**
+    	 * Whether or not the text field has an interactive rotation button:
+    	 * 
+    	 * When enabled, the user can rotate the textfield by pressing the rotation button.
 	 * 
 	 * When disabled, the rotation button is hidden.
-     */
-    public var rotatable(default, set):Bool = true;
+    	 */
+    	public var rotatable(default, set):Bool = true;
 
 
 	/*
@@ -89,11 +89,11 @@ class DynamicTextField extends Sprite {
 	 */
 	public var draggable(default, set):Bool = true;
 
-    /**
-     * This flag is flipped when the user starts dragging the text field.
+    	/**
+    	 * This flag is flipped when the user starts dragging the text field.
 	 * 
 	 * the dragging operation starts when the textfield starts moving.
-     */
+    	 */
 	public var currentlyDragging(default, null):Bool = false;
 
 	/**
@@ -106,13 +106,13 @@ class DynamicTextField extends Sprite {
 	 */
 	public var matchTextSize(default, set):Bool = false;
 
-    /**
-     * An array of the `BitmapData` objects used to draw the text field's corners & middles.
-     * 
-     * - If the array contains only one element, the text field will use that element f
+    	/**
+    	 * An array of the `BitmapData` objects used to draw the text field's corners & middles.
+    	 * 
+    	 * - If the array contains only one element, the text field will use that element f
 	 * or all corners & middles.
-     */
-    public var jointGraphics(default, null):JointGraphic;
+    	 */
+    	public var jointGraphics(default, null):JointGraphic;
 
 	/**
 	 * When the text field isnt selected (or, out of focus), 
@@ -195,47 +195,46 @@ class DynamicTextField extends Sprite {
 	**/
 	public var onRotated:(Float, Float) -> Void = (rotation, previousRotation) -> {};
     
-    /**
-     * Creates a new `DynamicTextField` object. joints and borders will be visible by default.
+    	/**
+    	 * Creates a new `DynamicTextField` object. joints and borders will be visible by default.
 	 * You can turn this off by setting `hideControlsWhenUnfocused`.
-     */
-    public function new() {
-        super();
-        textField = new TextField();
+    	 */
+    	public function new() {
+        	super();
+        	textField = new TextField();
 		textField.defaultTextFormat = new TextFormat(null, null, null , null, null, null, null, null, "left", Std.int(JOINT_GUTTER * 2), Std.int(JOINT_GUTTER * 2), null, null);
-        addChild(textField);
+        	addChild(textField);
 
-        borders = {
-            left: new Sprite(),
-            right: new Sprite(),
-            top: new Sprite(),
-            bottom: new Sprite()
-        };
+        	borders = {
+            		left: new Sprite(),
+           		right: new Sprite(),
+            		top: new Sprite(),
+            		bottom: new Sprite()
+        	};
 
 		jointGraphics = new JointGraphic(this);
 		rm = new JointManager(this);
 
-        set_virtualBorderSize(virtualBorderSize); //already calls set_borderSize
+        	set_virtualBorderSize(virtualBorderSize); //already calls set_borderSize
 
-        borders.top.x = borders.top.y = 0;
-        addChild(borders.top);
+        	borders.top.x = borders.top.y = 0;
+        	addChild(borders.top);
 
-        borders.bottom.x = 0;
-        borders.bottom.y = textField.height;
-        addChild(borders.bottom);
+        	borders.bottom.x = 0;
+        	borders.bottom.y = textField.height;
+        	addChild(borders.bottom);
 
-        borders.left.x = 0;
-        borders.left.y = 0;
-        addChild(borders.left);
+        	borders.left.x = borders.left.y = 0;
+        	addChild(borders.left);
 
-        borders.right.x = textField.width;
-        borders.right.y = 0;
-        addChild(borders.right);
+        	borders.right.x = textField.width;
+        	borders.right.y = 0;
+        	addChild(borders.right);
 
-        for (b in [borders.left, borders.right, borders.top, borders.bottom]) {
+        	for (b in [borders.left, borders.right, borders.top, borders.bottom]) {
 			b.addEventListener(MouseEvent.MOUSE_OVER, mouseOverBorder);
-            b.addEventListener(MouseEvent.MOUSE_DOWN, registerDrag);
-        }
+            		b.addEventListener(MouseEvent.MOUSE_DOWN, registerDrag);
+        	}
 
 		joints = {
 			middleLeft: new Sprite(),
@@ -273,26 +272,25 @@ class DynamicTextField extends Sprite {
 		joints.middleTop.addEventListener(MouseEvent.MOUSE_DOWN, rm.startResizeTop);
 		joints.middleBottom.addEventListener(MouseEvent.MOUSE_DOWN, rm.startResizeBottom);
 
-        joints.rotation.addChild(new Bitmap(jointGraphics.rotationHandle));
+        	joints.rotation.addChild(new Bitmap(jointGraphics.rotationHandle));
 		joints.rotation.addEventListener(MouseEvent.MOUSE_OVER, mouseOverJoint);
 		joints.rotation.addEventListener(MouseEvent.MOUSE_DOWN, rm.startRotation);
 		
 		addChild(joints.rotation);
 
 		textField.addEventListener(MouseEvent.MOUSE_OVER, mouseOverTextField);
-        this.addEventListener(MouseEvent.MOUSE_OUT, mouseOut);
+        	this.addEventListener(MouseEvent.MOUSE_OUT, mouseOut);
 
 		//call setters for positioning things correctly
 		set_width(width);
 		set_height(height);
-		
+
 		textField.addEventListener(FocusEvent.FOCUS_IN, onFocusIn);
 		textField.addEventListener(FocusEvent.FOCUS_OUT, onFocusOut);
 		textField.addEventListener(Event.CHANGE, onTextChange);
-		
 
 		
-    }
+    	}
 
 	//--------------------------------------------------------------------------
 	// PUBLIC METHODS
@@ -382,9 +380,9 @@ class DynamicTextField extends Sprite {
 	//--------------------------------------------------------------------------
 	//CURSOR FUNCTIONS
 	//--------------------------------------------------------------------------
-    function mouseOverBorder(e:MouseEvent) {
-        Mouse.cursor = MouseCursor.MOVE;
-    }
+    	function mouseOverBorder(e:MouseEvent) {
+        	Mouse.cursor = MouseCursor.MOVE;
+    	}
 
 	function mouseOverJoint(e:MouseEvent) {
 		if (currentlyDragging) {
@@ -412,13 +410,13 @@ class DynamicTextField extends Sprite {
 		} 
 	}
 
-    function mouseOverTextField(e:MouseEvent) {
-        Mouse.cursor = !currentlyDragging ? MouseCursor.TEXT : MouseCursor.MOVE;
-    }
+    	function mouseOverTextField(e:MouseEvent) {
+        	Mouse.cursor = !currentlyDragging ? MouseCursor.TEXT : MouseCursor.MOVE;
+    	}
 
-    function mouseOut(e:MouseEvent) {
-        Mouse.cursor = !currentlyDragging ? MouseCursor.DEFAULT : MouseCursor.MOVE;
-    }
+    	function mouseOut(e:MouseEvent) {
+       		Mouse.cursor = !currentlyDragging ? MouseCursor.DEFAULT : MouseCursor.MOVE;
+    	}
 
 	/**
 		Hides everything, but the text field.
@@ -481,21 +479,21 @@ class DynamicTextField extends Sprite {
 	function set_borderSize(value:Float) {
 		for (b in [borders.left, borders.right, borders.top, borders.bottom]) {
 			b.graphics.clear();
-            b.graphics.lineStyle(value, borderColor);
-        }
+            		b.graphics.lineStyle(value, borderColor);
+        	}
 		if (value == 0) return borderSize = value; //skip drawing
 
-        borders.top.graphics.moveTo(0,0);
-        borders.top.graphics.lineTo(textField.width, 0);
+        	borders.top.graphics.moveTo(0, 0);
+        	borders.top.graphics.lineTo(textField.width, 0);
 
-        borders.bottom.graphics.moveTo(0, 0);
-        borders.bottom.graphics.lineTo(textField.width, 0);
+        	borders.bottom.graphics.moveTo(0, 0);
+        	borders.bottom.graphics.lineTo(textField.width, 0);
 
-        borders.left.graphics.moveTo(0,0);
-        borders.left.graphics.lineTo(0, textField.height);
+        	borders.left.graphics.moveTo(0, 0);
+        	borders.left.graphics.lineTo(0, textField.height);
 
-        borders.right.graphics.moveTo(0, 0);
-        borders.right.graphics.lineTo(0, textField.height);
+       		borders.right.graphics.moveTo(0, 0);
+        	borders.right.graphics.lineTo(0, textField.height);
 
 		return borderSize = value;
 	}
@@ -516,9 +514,9 @@ class DynamicTextField extends Sprite {
 		return value;
 	}
 
-    //override setters for width and height
-    override function set_width(value:Float) {
-        textField.width = value - JOINT_GUTTER * 2 - 1;
+    	//override setters for width and height
+    	override function set_width(value:Float) {
+        	textField.width = value - JOINT_GUTTER * 2 - 1;
 		for (b in [borders.top, borders.bottom]) {
 			b.graphics.clear();
 			b.graphics.lineStyle(borderSize, borderColor);
@@ -541,13 +539,13 @@ class DynamicTextField extends Sprite {
 		joints.middleBottom.x = textField.width / 2 - joints.middleBottom.width / 2;
 
 		joints.rotation.x = textField.width / 2 - joints.rotation.width / 2;
-		
-		updateHeight();
-        return value;
-    }
 
-    override function set_height(value:Float) {
-        textField.height = value - JOINT_GUTTER  - ROTATION_JOINT_GUTTER - 1;
+		updateHeight();
+        	return value;
+    	}
+
+    	override function set_height(value:Float) {
+        	textField.height = value - JOINT_GUTTER  - ROTATION_JOINT_GUTTER - 1;
 		for (b in [borders.left, borders.right]) {
 			b.graphics.clear();
 			b.graphics.lineStyle(borderSize, borderColor);
@@ -572,18 +570,18 @@ class DynamicTextField extends Sprite {
 		joints.rotation.y = -ROTATION_JOINT_GUTTER;
 
 		updateWidth();
-        return value;
-    }
+        	return value;
+    	}
 
 	function updateWidth() {
 		textField.width = width - JOINT_GUTTER * 2 - 1;
 		for (b in [borders.top, borders.bottom]) {
 			b.graphics.clear();
 			b.graphics.lineStyle(borderSize, borderColor);
-			b.graphics.moveTo(0,0);
+			b.graphics.moveTo(0, 0);
 			b.graphics.lineTo(textField.width, 0);
 			b.graphics.lineStyle(virtualBorderSize, borderColor , 0.01);
-			b.graphics.moveTo(0,0);
+			b.graphics.moveTo(0, 0);
 			b.graphics.lineTo(textField.width, 0);
 		}
 		borders.right.x = textField.width;
@@ -605,10 +603,10 @@ class DynamicTextField extends Sprite {
 		for (b in [borders.left, borders.right]) {
 			b.graphics.clear();
 			b.graphics.lineStyle(borderSize, borderColor);
-			b.graphics.moveTo(0,0);
+			b.graphics.moveTo(0, 0);
 			b.graphics.lineTo(0, textField.height);
 			b.graphics.lineStyle(virtualBorderSize, borderColor , 0.01);
-			b.graphics.moveTo(0,0);
+			b.graphics.moveTo(0, 0);
 			b.graphics.lineTo(0, textField.height);
 		}
 		borders.bottom.y = textField.height;
@@ -635,7 +633,6 @@ class DynamicTextField extends Sprite {
 	}
 
 	function set_hideControlsWhenUnfocused(value:Bool) {
-		
 		if (!hasFocus) hideControls();
 		else showControls();
 
@@ -684,77 +681,24 @@ class DynamicTextField extends Sprite {
 		set_borderSize(borderSize);
 		for (b in [borders.left, borders.right, borders.top, borders.bottom]) {
 			b.graphics.clear();
-            b.graphics.lineStyle(value, borderColor , 0.01);
-        }
+            		b.graphics.lineStyle(value, borderColor , 0.01);
+        	}
 		if (value == 0) return virtualBorderSize = value; //skip drawing
 
-        borders.top.graphics.moveTo(0,0);
-        borders.top.graphics.lineTo(textField.width, 0);
+        	borders.top.graphics.moveTo(0, 0);
+        	borders.top.graphics.lineTo(textField.width, 0);
 
-        borders.bottom.graphics.moveTo(0, 0);
-        borders.bottom.graphics.lineTo(textField.width, 0);
+        	borders.bottom.graphics.moveTo(0, 0);
+        	borders.bottom.graphics.lineTo(textField.width, 0);
 
-        borders.left.graphics.moveTo(0,0);
-        borders.left.graphics.lineTo(0, textField.height);
+        	borders.left.graphics.moveTo(0,0);
+        	borders.left.graphics.lineTo(0, textField.height);
 
-        borders.right.graphics.moveTo(0, 0);
-        borders.right.graphics.lineTo(0, textField.height);
+        	borders.right.graphics.moveTo(0, 0);
+        	borders.right.graphics.lineTo(0, textField.height);
 
 		return virtualBorderSize = value;
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1416,24 +1360,24 @@ class DynamicTextField extends Sprite {
     function set_textColor(value:Int):Int {
         return textField.textColor = value;
     }
-    function get_textHeight():Float {
-        return textField.textHeight;
-    }
-    function get_textWidth():Float {
-        return textField.textWidth;
-    }
-    function get_type():openfl.text.TextFieldType {
-        return textField.type;
-    }
-    function set_type(value:openfl.text.TextFieldType):openfl.text.TextFieldType {
-        return textField.type = value;
-    }
-    function get_wordWrap():Bool {
-        return textField.wordWrap;
-    }
-    function set_wordWrap(value:Bool):Bool {
-        return textField.wordWrap = value;
-    }
+    	function get_textHeight():Float {
+        	return textField.textHeight;
+    	}
+    	function get_textWidth():Float {
+        	return textField.textWidth;
+    	}
+    	function get_type():openfl.text.TextFieldType {
+        	return textField.type;
+    	}
+    	function set_type(value:openfl.text.TextFieldType):openfl.text.TextFieldType {
+        	return textField.type = value;
+    	}
+    	function get_wordWrap():Bool {
+        	return textField.wordWrap;
+    	}
+    	function set_wordWrap(value:Bool):Bool {
+        	return textField.wordWrap = value;
+   	}
 
 	function get_styleSheet():StyleSheet {
 		return textField.styleSheet;
